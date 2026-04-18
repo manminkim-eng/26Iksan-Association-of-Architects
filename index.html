@@ -386,6 +386,79 @@
     .bgm-title { font-size: 12px; }
     .bgm-artist { font-size: 10px; }
   }
+
+  /* ======= 유튜브 숏츠 링크 섹션 ======= */
+  .shorts-section {
+    padding: 50px 40px;
+    background: linear-gradient(135deg, #0f2333 0%, #1a3a4f 100%);
+    color: #fff;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .shorts-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #c47c4a;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .shorts-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .shorts-desc {
+    font-size: 14px;
+    opacity: 0.85;
+    line-height: 1.8;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  .shorts-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    color: #1a3a4f;
+    padding: 14px 24px 14px 16px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .shorts-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(255,0,0,0.4);
+  }
+  .shorts-thumb {
+    flex-shrink: 0;
+    line-height: 0;
+  }
+  .shorts-link-text {
+    text-align: left;
+    line-height: 1.3;
+  }
+  .shorts-platform {
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .shorts-cta {
+    font-size: 16px;
+    color: #1a3a4f;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+  @media (max-width: 680px) {
+    .shorts-section { padding: 40px 20px; }
+    .shorts-title { font-size: 18px; }
+    .shorts-desc { font-size: 13px; }
+    .shorts-link { padding: 12px 20px 12px 14px; }
+  }
+
 </style>
 </head>
 <body>
@@ -404,7 +477,7 @@
 
   <!-- ============ 표지 ============ -->
   <div class="cover">
-    <img src="035_1776482732435.jpg" alt="변산온천산장 단체사진">
+    <img src="035_1776482732435.jpg" alt="부안 청호수마을 단체사진">
     <div class="cover-text">
       <div class="cover-date">2026 · 04 · 17 ~ 18</div>
       <div class="cover-title">익산건축사회<br>야유회 기록</div>
@@ -431,7 +504,7 @@
     <div class="schedule-item"><span class="schedule-time">11:30</span><span class="schedule-place">고창 학원농장 유채꽃밭</span></div>
     <div class="schedule-item"><span class="schedule-time">12:40</span><span class="schedule-place">산수가든 (고창 고수면)</span></div>
     <div class="schedule-item"><span class="schedule-time">14:00</span><span class="schedule-place">선운사</span></div>
-    <div class="schedule-item"><span class="schedule-time">16:50</span><span class="schedule-place">부안 변산온천산장 도착</span></div>
+    <div class="schedule-item"><span class="schedule-time">16:50</span><span class="schedule-place">부안 부안 청호수마을 도착</span></div>
     <div class="schedule-item"><span class="schedule-time">18:00</span><span class="schedule-place">저녁식사 · 격포수산시장 생선회</span></div>
   </div>
 
@@ -546,32 +619,32 @@
     <div class="photo-full"><img src="033_20260417_152248.jpg" alt="선운사를 나서며"></div>
   </div>
 
-  <!-- Scene: 변산온천산장 -->
+  <!-- Scene: 부안 청호수마을 -->
   <div class="scene">
     <div class="scene-header">
       <span class="scene-time">16:50 · EVENING</span>
-      <span class="scene-title">부안 변산온천산장, 단체로 모이다</span>
+      <span class="scene-title">부안 부안 청호수마을, 단체로 모이다</span>
     </div>
     <div class="scene-text">
-      오늘의 숙소는 부안 변산면의 '변산온천산장'. 온천이 있는 아담한 산장형 숙소로,
+      오늘의 숙소는 부안 하서면의 '청호수마을'. 온천이 있는 아담한 산장형 숙소로,
       하루 종일 걸은 다리를 뜨끈한 물에 담그기 딱 좋은 곳이었다.
       숙소 앞마당에 모든 회원이 모여 단체사진을 남겼고, 저녁상엔 격포수산시장에서
       공수한 생선회가 올랐다.
     </div>
     <div class="info-card">
       <div class="info-label">STAY</div>
-      <div class="info-name">변산온천산장</div>
-      <div class="info-addr">전북 부안군 변산면 묵정길 83-6</div>
-      <a href="https://naver.me/5E31LBwR" class="info-link" target="_blank">네이버 지도에서 보기 →</a>
+      <div class="info-name">부안 청호수마을</div>
+      <div class="info-addr">전북 부안군 하서면 영성로 258</div>
+      <a href="https://map.naver.com/p/search/부안%20청호수마을" class="info-link" target="_blank">네이버 지도에서 보기 →</a>
     </div>
 
-    <div class="photo-full"><img src="034_20260417_154654.jpg" alt="변산온천산장 조경"></div>
+    <div class="photo-full"><img src="034_20260417_154654.jpg" alt="부안 청호수마을 조경"></div>
   </div>
 
   <div class="highlight">
     <div class="highlight-label">GROUP PHOTO</div>
     <div class="highlight-text">
-      변산온천산장 앞마당, 모든 회원이 주먹을 쥐고 한 컷.
+      부안 청호수마을 앞마당, 모든 회원이 주먹을 쥐고 한 컷.
       익산건축사회의 결속을 담은 이번 여행의 상징적인 한 장면.
     </div>
   </div>
@@ -608,7 +681,7 @@
       <span class="scene-title">둘째 날의 시작</span>
     </div>
     <div class="scene-text">
-      변산온천산장에서의 하룻밤이 몸을 풀어주었다.
+      부안 청호수마을에서의 하룻밤이 몸을 풀어주었다.
       숙소 앞 벤치에서 잠시 햇볕을 쬐며 출발 전의 나른한 아침을 보냈다.
       간밤의 피로가 살짝 남아있었지만, 쾌청한 봄볕이 하루를 깨웠다.
     </div>
@@ -731,6 +804,28 @@
     <div class="ending-author">IKSAN ARCHITECTS · SPRING 2026</div>
   </div>
 
+  <!-- ============ 유튜브 숏츠 링크 ============ -->
+  <div class="shorts-section">
+    <div class="shorts-label">RELATED VIDEO</div>
+    <div class="shorts-title">장자도 전망대 · 유튜브 쇼츠</div>
+    <div class="shorts-desc">
+      장자도 전망대에서 담은 서해의 고요한 오후 ―<br>
+      이무진의 「신호등」과 함께, 60초의 감성 영상
+    </div>
+    <a href="https://youtube.com/shorts/l3QtLZLq_3k" target="_blank" rel="noopener" class="shorts-link">
+      <div class="shorts-thumb">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="12" fill="#FF0000"/>
+          <path d="M10 8.5L15.5 12L10 15.5V8.5Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="shorts-link-text">
+        <div class="shorts-platform">YouTube Shorts</div>
+        <div class="shorts-cta">▶ 영상 보러 가기</div>
+      </div>
+    </a>
+  </div>
+
 </div>
 
 <script>
@@ -761,20 +856,34 @@
     }
   }
 
-  // 페이지 로드 시 자동재생 시도 (브라우저 정책상 실패할 수 있음 → 사용자가 클릭하면 시작됨)
-  window.addEventListener('load', () => {
+  // === BGM 자동재생 강화 ===
+  // 1) 페이지 로드 시 바로 재생 시도
+  // 2) 차단되면 사용자가 페이지 어디든 최초로 상호작용(클릭/터치/스크롤/키보드)하는 순간 자동 재생
+  
+  function startBGM() {
     audio.volume = 0.35;
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-      playPromise.then(() => {
-        icon.classList.add('playing');
-        icon.textContent = '■';
-        artist.textContent = '아이유 · 재생 중';
-        isPlaying = true;
-      }).catch(() => {
-        // 자동재생 차단 → 클릭 유도 상태 유지
-      });
-    }
+    return audio.play().then(() => {
+      icon.classList.add('playing');
+      icon.textContent = '■';
+      artist.textContent = '아이유 · 재생 중';
+      isPlaying = true;
+      return true;
+    }).catch(() => false);
+  }
+  
+  window.addEventListener('DOMContentLoaded', () => {
+    startBGM().then(success => {
+      if (!success) {
+        // 자동재생 차단 → 첫 사용자 상호작용 시 자동 재생
+        artist.textContent = '아이유 · 곧 재생됩니다';
+        const events = ['click', 'touchstart', 'scroll', 'keydown', 'mousemove'];
+        const triggerOnce = () => {
+          startBGM();
+          events.forEach(e => document.removeEventListener(e, triggerOnce, true));
+        };
+        events.forEach(e => document.addEventListener(e, triggerOnce, { once: true, passive: true, capture: true }));
+      }
+    });
   });
 </script>
 

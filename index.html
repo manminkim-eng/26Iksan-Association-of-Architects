@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>익산건축사회 야유회 브이로그 | 고창·부안·군산 1박 2일</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Noto Sans KR', 'Malgun Gothic', '맑은 고딕', sans-serif;
+    background: #f7f4ef;
+    color: #2c2c2c;
+    line-height: 1.7;
+    padding: 0;
+  }
+  
+  .vlog-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  
+  /* ======= BGM 플레이어 (플로팅) ======= */
+  .bgm-player {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(26, 58, 79, 0.95);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 50px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    font-size: 13px;
+    transition: all 0.3s;
+    user-select: none;
+  }
+  .bgm-player:hover {
+    background: rgba(26, 58, 79, 1);
+    transform: translateY(-2px);
+  }
+  .bgm-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #c47c4a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .bgm-icon.playing {
+    animation: rotate 4s linear infinite;
+  }
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .bgm-info {
+    line-height: 1.3;
+  }
+  .bgm-title {
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .bgm-artist {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+  
+  /* ======= 표지 ======= */
+  .cover {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2c5f7f 0%, #4a7fa3 100%);
+  }
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+  }
+  .cover-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    width: 90%;
+  }
+  .cover-date {
+    font-size: 16px;
+    letter-spacing: 8px;
+    opacity: 0.9;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+  .cover-title {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+    line-height: 1.3;
+  }
+  .cover-subtitle {
+    font-size: 18px;
+    font-weight: 300;
+    opacity: 0.95;
+    letter-spacing: 2px;
+  }
+  .cover-line {
+    width: 60px;
+    height: 2px;
+    background: #fff;
+    margin: 25px auto;
+    opacity: 0.6;
+  }
+  .cover-bgm-hint {
+    margin-top: 30px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    font-weight: 300;
+  }
+  .cover-bgm-hint span {
+    display: inline-block;
+    padding: 6px 18px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+  }
+  
+  /* ======= 섹션 ======= */
+  .day-header {
+    padding: 60px 40px 40px;
+    text-align: center;
+    background: #fff;
+  }
+  .day-tag {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #c47c4a;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .day-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1a3a4f;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+  .day-desc {
+    font-size: 15px;
+    color: #666;
+    max-width: 500px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+  .day-divider {
+    width: 40px;
+    height: 3px;
+    background: #c47c4a;
+    margin: 25px auto;
+  }
+  
+  .scene {
+    padding: 30px 40px;
+  }
+  .scene-header {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e8e2d8;
+    padding-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  .scene-time {
+    font-size: 13px;
+    color: #c47c4a;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-right: 15px;
+    white-space: nowrap;
+  }
+  .scene-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a3a4f;
+    letter-spacing: -0.5px;
+  }
+  .scene-text {
+    font-size: 15px;
+    color: #444;
+    margin-bottom: 25px;
+    line-height: 1.8;
+  }
+  
+  /* ======= 이미지 그리드 (가로/세로 혼용 호환) ======= */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .photo-grid.single { grid-template-columns: 1fr; }
+  .photo-grid.triple { grid-template-columns: repeat(3, 1fr); }
+  
+  .photo-grid img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  
+  .photo-full {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .photo-full img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+  }
+  
+  .photo-portrait {
+    max-width: 70%;
+    margin: 0 auto 10px;
+  }
+  .photo-portrait img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+  }
+  
+  /* ======= 정보 카드 ======= */
+  .info-card {
+    background: #fff;
+    border: 1px solid #e8e2d8;
+    border-left: 4px solid #c47c4a;
+    border-radius: 4px;
+    padding: 20px 25px;
+    margin: 20px 0 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .info-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #c47c4a;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .info-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1a3a4f;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .info-addr {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 12px;
+  }
+  .info-link {
+    display: inline-block;
+    font-size: 13px;
+    color: #2c5f7f;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 14px;
+    background: #f3ede4;
+    border-radius: 20px;
+    transition: background 0.2s;
+  }
+  .info-link:hover {
+    background: #e8dcc7;
+  }
+  
+  /* ======= 하이라이트 박스 ======= */
+  .highlight {
+    background: #f3ede4;
+    padding: 30px;
+    margin: 30px 40px;
+    border-left: 4px solid #c47c4a;
+    border-radius: 4px;
+  }
+  .highlight-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #c47c4a;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .highlight-text {
+    font-size: 15px;
+    color: #333;
+    line-height: 1.8;
+  }
+  
+  /* ======= 마무리 ======= */
+  .ending {
+    padding: 60px 40px;
+    text-align: center;
+    background: #1a3a4f;
+    color: #fff;
+  }
+  .ending-quote {
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.8;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+  }
+  .ending-author {
+    font-size: 14px;
+    opacity: 0.7;
+    letter-spacing: 3px;
+  }
+  
+  /* ======= 일정 요약 ======= */
+  .schedule-box {
+    background: #fafafa;
+    padding: 25px 30px;
+    margin: 20px 40px;
+    border-radius: 8px;
+    border: 1px solid #e8e2d8;
+  }
+  .schedule-title {
+    font-size: 14px;
+    color: #c47c4a;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+  }
+  .schedule-item {
+    display: flex;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  .schedule-time {
+    color: #c47c4a;
+    font-weight: 600;
+    width: 100px;
+    flex-shrink: 0;
+  }
+  .schedule-place {
+    color: #333;
+  }
+  
+  /* ======= 반응형 ======= */
+  @media (max-width: 680px) {
+    .cover-title { font-size: 28px; }
+    .cover-date { font-size: 13px; letter-spacing: 5px; }
+    .day-title { font-size: 24px; }
+    .scene { padding: 20px; }
+    .day-header { padding: 40px 20px 30px; }
+    .highlight { margin: 20px; padding: 20px; }
+    .schedule-box { margin: 15px 20px; padding: 20px; }
+    .ending { padding: 40px 20px; }
+    .ending-quote { font-size: 18px; }
+    .photo-portrait { max-width: 90%; }
+    .photo-grid.triple { grid-template-columns: repeat(2, 1fr); }
+    .bgm-player {
+      bottom: 15px;
+      right: 15px;
+      padding: 10px 14px;
+    }
+    .bgm-icon { width: 32px; height: 32px; }
+    .bgm-title { font-size: 12px; }
+    .bgm-artist { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BGM 플로팅 플레이어 -->
+<div class="bgm-player" id="bgmPlayer" onclick="toggleBGM()">
+  <div class="bgm-icon" id="bgmIcon">♪</div>
+  <div class="bgm-info">
+    <div class="bgm-title">밤편지</div>
+    <div class="bgm-artist">아이유 · 클릭하여 재생</div>
+  </div>
+</div>
+<audio id="bgmAudio" src="bgm.mp3" loop preload="auto"></audio>
+
+<div class="vlog-container">
+
+  <!-- ============ 표지 ============ -->
+  <div class="cover">
+    <img src="035_1776482732435.jpg" alt="변산온천산장 단체사진">
+    <div class="cover-text">
+      <div class="cover-date">2026 · 04 · 17 ~ 18</div>
+      <div class="cover-title">익산건축사회<br>야유회 기록</div>
+      <div class="cover-line"></div>
+      <div class="cover-subtitle">고창 · 부안 · 군산</div>
+      <div class="cover-bgm-hint"><span>♪ BGM · 아이유 「밤편지」</span></div>
+    </div>
+  </div>
+
+  <!-- ============ DAY 1 ============ -->
+  <div class="day-header">
+    <div class="day-tag">DAY 1 · APRIL 17 (FRI)</div>
+    <div class="day-title">봄이 피어난 들판을 걷다</div>
+    <div class="day-divider"></div>
+    <div class="day-desc">
+      익산을 출발해 고창의 노란 유채꽃밭을 만나고,<br>
+      선운사에서 봄비 속을 걸었던 첫날.
+    </div>
+  </div>
+
+  <div class="schedule-box">
+    <div class="schedule-title">FRIDAY SCHEDULE</div>
+    <div class="schedule-item"><span class="schedule-time">10:00</span><span class="schedule-place">익산 출발</span></div>
+    <div class="schedule-item"><span class="schedule-time">11:30</span><span class="schedule-place">고창 학원농장 유채꽃밭</span></div>
+    <div class="schedule-item"><span class="schedule-time">12:40</span><span class="schedule-place">산수가든 (고창 고수면)</span></div>
+    <div class="schedule-item"><span class="schedule-time">14:00</span><span class="schedule-place">선운사</span></div>
+    <div class="schedule-item"><span class="schedule-time">16:50</span><span class="schedule-place">부안 변산온천산장 도착</span></div>
+    <div class="schedule-item"><span class="schedule-time">18:00</span><span class="schedule-place">저녁식사 · 격포수산시장 생선회</span></div>
+  </div>
+
+  <!-- Scene: 학원농장 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">11:39 · FIRST STOP</span>
+      <span class="scene-title">고창 학원농장, 노란 봄</span>
+    </div>
+    <div class="scene-text">
+      넓게 펼쳐진 유채꽃밭. 흐린 하늘 아래에서도 꽃은 선명한 노란빛을 밀어 올렸다.
+      회원들은 저마다 카메라를 들고 꽃길 사이로 흩어졌다.
+    </div>
+
+    <div class="photo-full"><img src="001_20260417_113912.jpg" alt="학원농장 유채꽃밭"></div>
+    <div class="photo-full"><img src="002_1776400704578.jpg" alt="유채꽃밭으로 들어서는 길"></div>
+    <div class="photo-full"><img src="005_20260417_114748.jpg" alt="유채꽃밭 전경"></div>
+
+    <div class="photo-grid">
+      <img src="003_20260417_114621.jpg" alt="학원농장 안내판">
+      <img src="004_20260417_114649.jpg" alt="음표 조형물">
+    </div>
+
+    <div class="photo-full"><img src="006_20260417_114803.jpg" alt="유채꽃밭 풍경"></div>
+    <div class="photo-full"><img src="007_20260417_114914.jpg" alt="꽃밭에 모인 사람들"></div>
+    <div class="photo-full"><img src="008_1776400704401.jpg" alt="정자에 앉은 회원"></div>
+
+    <div class="photo-grid">
+      <img src="009_20260417_115431.jpg" alt="꽃밭 속 일행">
+      <img src="010_20260417_115448.jpg" alt="유채밭 가운데">
+    </div>
+
+    <div class="photo-full"><img src="011_20260417_115510.jpg" alt="넓은 유채꽃밭"></div>
+
+    <div class="photo-grid">
+      <img src="012_1776400704685.jpg" alt="유채꽃밭에서">
+      <img src="013_20260417_115602.jpg" alt="회원 인물 사진">
+    </div>
+
+    <div class="photo-full"><img src="014_1776400704056.jpg" alt="포토존에서"></div>
+    <div class="photo-full"><img src="015_1776400704323.jpg" alt="유채꽃밭 가로수 아래"></div>
+    <div class="photo-full"><img src="016_20260417_120219.jpg" alt="유채꽃 손짓"></div>
+
+    <div class="photo-grid">
+      <img src="017_1776400704256.jpg" alt="유채꽃밭 배경">
+      <img src="018_1776400704174.jpg" alt="꽃밭 풍경">
+    </div>
+
+    <div class="photo-full"><img src="019_20260417_120655.jpg" alt="꽃밭을 걷는 회원들"></div>
+  </div>
+
+  <!-- Scene: 점심 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">12:40 · LUNCH</span>
+      <span class="scene-title">산수가든, 뜨끈한 한 그릇</span>
+    </div>
+    <div class="scene-text">
+      유채꽃밭을 떠나 점심을 먹으러 이동. 오늘의 점심은 고창 고수면에 있는 '산수가든'.
+      산자락 아래 자리 잡은 아늑한 시골 식당에서 뜨끈한 매운탕과 밑반찬으로
+      이른 아침부터 움직인 몸을 든든히 달랬다. 식당 마당의 노란 조경수가
+      유채꽃의 여운을 이어주는 듯했다.
+    </div>
+    <div class="info-card">
+      <div class="info-label">PLACE</div>
+      <div class="info-name">산수가든</div>
+      <div class="info-addr">전북 고창군 고수면 강촌길 16</div>
+      <a href="https://naver.me/GItVjYWE" class="info-link" target="_blank">네이버 지도에서 보기 →</a>
+    </div>
+
+    <div class="photo-portrait"><img src="020_20260417_134036.jpg" alt="산수가든 조경"></div>
+  </div>
+
+  <!-- Scene: 선운사 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">14:16 · AFTERNOON</span>
+      <span class="scene-title">선운사, 봄비 속을 걷다</span>
+    </div>
+    <div class="scene-text">
+      선운사에 닿자 봄비가 내렸다. 우산을 쓰고 걷는 숲길은 오히려 고요했다.
+      연등이 걸린 마당과 오래된 당우 사이로 젖은 흙 냄새가 번졌다.
+    </div>
+
+    <div class="photo-full"><img src="021_20260417_141637.jpg" alt="선운사 입구"></div>
+
+    <div class="photo-grid">
+      <img src="022_20260417_141720.jpg" alt="선운사 표지석">
+      <img src="023_20260417_142024.jpg" alt="숲길을 걷는 일행">
+    </div>
+
+    <div class="photo-full"><img src="024_20260417_142144.jpg" alt="선운사 경내"></div>
+
+    <div class="photo-grid">
+      <img src="025_20260417_142250.jpg" alt="선운사 담장">
+      <img src="026_20260417_143329.jpg" alt="선운사 개울">
+    </div>
+
+    <div class="photo-full"><img src="027_20260417_143505.jpg" alt="연등이 걸린 마당"></div>
+
+    <div class="photo-grid">
+      <img src="028_20260417_143859.jpg" alt="선운사 당우">
+      <img src="029_20260417_143942.jpg" alt="벚꽃과 선운사">
+    </div>
+
+    <div class="photo-grid">
+      <img src="030_20260417_144012.jpg" alt="선운사 디테일">
+      <img src="031_20260417_144210.jpg" alt="연등 클로즈업">
+    </div>
+
+    <div class="photo-full"><img src="032_20260417_144315.jpg" alt="선운사 차밭"></div>
+    <div class="photo-full"><img src="033_20260417_152248.jpg" alt="선운사를 나서며"></div>
+  </div>
+
+  <!-- Scene: 변산온천산장 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">16:50 · EVENING</span>
+      <span class="scene-title">부안 변산온천산장, 단체로 모이다</span>
+    </div>
+    <div class="scene-text">
+      오늘의 숙소는 부안 변산면의 '변산온천산장'. 온천이 있는 아담한 산장형 숙소로,
+      하루 종일 걸은 다리를 뜨끈한 물에 담그기 딱 좋은 곳이었다.
+      숙소 앞마당에 모든 회원이 모여 단체사진을 남겼고, 저녁상엔 격포수산시장에서
+      공수한 생선회가 올랐다.
+    </div>
+    <div class="info-card">
+      <div class="info-label">STAY</div>
+      <div class="info-name">변산온천산장</div>
+      <div class="info-addr">전북 부안군 변산면 묵정길 83-6</div>
+      <a href="https://naver.me/5E31LBwR" class="info-link" target="_blank">네이버 지도에서 보기 →</a>
+    </div>
+
+    <div class="photo-full"><img src="034_20260417_154654.jpg" alt="변산온천산장 조경"></div>
+  </div>
+
+  <div class="highlight">
+    <div class="highlight-label">GROUP PHOTO</div>
+    <div class="highlight-text">
+      변산온천산장 앞마당, 모든 회원이 주먹을 쥐고 한 컷.
+      익산건축사회의 결속을 담은 이번 여행의 상징적인 한 장면.
+    </div>
+  </div>
+  <div style="padding: 0 40px 40px;">
+    <div class="photo-full"><img src="035_1776482732435.jpg" alt="단체 사진"></div>
+  </div>
+
+
+  <!-- ============ DAY 2 ============ -->
+  <div class="day-header">
+    <div class="day-tag">DAY 2 · APRIL 18 (SAT)</div>
+    <div class="day-title">서해의 섬, 장자도 걷기</div>
+    <div class="day-divider"></div>
+    <div class="day-desc">
+      맑게 갠 하늘 아래 선유도와 장자도를 걷고,<br>
+      고소한 박대구이로 여정을 마무리한 둘째 날.
+    </div>
+  </div>
+
+  <div class="schedule-box">
+    <div class="schedule-title">SATURDAY SCHEDULE</div>
+    <div class="schedule-item"><span class="schedule-time">08:10</span><span class="schedule-place">숙소 출발</span></div>
+    <div class="schedule-item"><span class="schedule-time">08:30</span><span class="schedule-place">방가네 소고기국밥수육 · 아침식사</span></div>
+    <div class="schedule-item"><span class="schedule-time">09:40</span><span class="schedule-place">선유도리 수월지 공영주차장</span></div>
+    <div class="schedule-item"><span class="schedule-time">~11:30</span><span class="schedule-place">장자도 걷기</span></div>
+    <div class="schedule-item"><span class="schedule-time">11:40</span><span class="schedule-place">대장봉 로컬푸드 · 박대구이백반 + 호떡</span></div>
+    <div class="schedule-item"><span class="schedule-time">12:40</span><span class="schedule-place">집으로</span></div>
+  </div>
+
+  <!-- Scene: 아침 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">08:51 · MORNING</span>
+      <span class="scene-title">둘째 날의 시작</span>
+    </div>
+    <div class="scene-text">
+      변산온천산장에서의 하룻밤이 몸을 풀어주었다.
+      숙소 앞 벤치에서 잠시 햇볕을 쬐며 출발 전의 나른한 아침을 보냈다.
+      간밤의 피로가 살짝 남아있었지만, 쾌청한 봄볕이 하루를 깨웠다.
+    </div>
+
+    <div class="photo-portrait"><img src="036_1776482723642.jpg" alt="아침 벤치"></div>
+  </div>
+
+  <!-- Scene: 선유도리 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">10:35 · GUNSAN</span>
+      <span class="scene-title">선유도리, 바다 건너 다리를 건너다</span>
+    </div>
+    <div class="scene-text">
+      군산 선유도리에 도착. 바다 위를 가로지르는 다리를 건너며 섬 여행이 시작됐다.
+      파란 하늘, 파란 바다 - 전날의 비가 언제였나 싶을 정도로 맑게 갰다.
+      길게 뻗은 보행다리 위를 걸으며, 회원들은 바다와 바람과 햇살을 함께 맞았다.
+    </div>
+
+    <div class="photo-full"><img src="037_20260418_103552.jpg" alt="선유도리 보행다리"></div>
+    <div class="photo-full"><img src="038_20260418_103836.jpg" alt="선유도 다리를 건너며"></div>
+
+    <div class="photo-grid">
+      <img src="039_1776482723559.jpg" alt="다리 위 일행">
+      <img src="040_1776482723440.jpg" alt="선유도 풍경">
+    </div>
+
+    <div class="photo-full"><img src="041_1776482723273.jpg" alt="선유도리 마을"></div>
+  </div>
+
+  <!-- Scene: 장자도 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">11:11 · JANGJADO</span>
+      <span class="scene-title">장자도 전망대, 서해를 품다</span>
+    </div>
+    <div class="scene-text">
+      장자도로 발길을 옮겼다. 전망대까지 오르는 길은 제법 가파르지만,
+      올라선 순간 발아래 펼쳐진 바다의 깊이가 그 수고를 보상했다.
+      섬과 항구, 어구가 쌓인 골목까지 모두 한눈에 들어왔다.
+    </div>
+
+    <div class="photo-full"><img src="042_20260418_111125.jpg" alt="장자도 진입"></div>
+
+    <div class="photo-grid">
+      <img src="043_1776482723076.jpg" alt="장자도 전망대 입구">
+      <img src="044_1776482722956.jpg" alt="바다를 바라보며">
+    </div>
+
+    <div class="photo-grid">
+      <img src="045_1776482723137.jpg" alt="전망대에서">
+      <img src="046_20260418_112618.jpg" alt="일행과 함께">
+    </div>
+
+    <div class="photo-full"><img src="047_20260418_112639.jpg" alt="전망대 서해 뷰"></div>
+    <div class="photo-full"><img src="048_20260418_112736.jpg" alt="서해 전경"></div>
+    <div class="photo-full"><img src="049_20260418_113012.jpg" alt="인물 컷"></div>
+    <div class="photo-full"><img src="050_1776482036378.jpg" alt="장자도에서 본 바다"></div>
+    <div class="photo-full"><img src="051_20260418_113818.jpg" alt="섬 전경"></div>
+  </div>
+
+  <!-- Scene: 어구길 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">11:46 · ALLEY</span>
+      <span class="scene-title">어구(漁具)가 쌓인 항구길</span>
+    </div>
+    <div class="scene-text">
+      장자도 안쪽 항구로 내려가니, 말려놓은 어구들이 양쪽으로 길게 쌓여 있었다.
+      노란 줄과 주홍 그물이 이루는 색감이 마치 설치미술 같았다.
+    </div>
+
+    <div class="photo-full"><img src="052_1776482036686.jpg" alt="어구가 쌓인 길"></div>
+  </div>
+
+  <!-- Scene: 마무리 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">11:47 · FINAL</span>
+      <span class="scene-title">선유스카이썬라인 앞에서</span>
+    </div>
+    <div class="scene-text">
+      선유스카이썬라인 앞 캐릭터와 함께 기념 한 컷. 
+      1박 2일, 짧지만 밀도 있는 여정이 이렇게 마무리됐다.
+    </div>
+
+    <div class="photo-full"><img src="053_1776482036646.jpg" alt="캐릭터 앞"></div>
+    <div class="photo-full"><img src="054_1776482036722.jpg" alt="마무리 기념사진"></div>
+  </div>
+
+  <!-- Scene: 장자도 점심/카페 -->
+  <div class="scene">
+    <div class="scene-header">
+      <span class="scene-time">12:00 · LUNCH</span>
+      <span class="scene-title">장자도에서의 마지막 한 끼</span>
+    </div>
+    <div class="scene-text">
+      장자도 걷기를 마치고 섬 안의 식당에서 점심을 먹었다. 박대구이백반과 호떡 —
+      바다 여행의 끝자락에 어울리는 메뉴였다. 고소하게 구워진 박대는 살이 포슬포슬하게
+      일어나 밥도둑이라는 말이 딱 맞았고, 후식으로 나온 호떡은 뜨끈하고 달큰했다.
+      식사 후에는 바다가 보이는 카페 테라스에 자리를 잡고 마지막 여유를 즐겼다.
+      파라솔 아래에서 바라본 서해가 오래도록 기억에 남을 것 같다.
+    </div>
+    <div class="info-card">
+      <div class="info-label">PLACE</div>
+      <div class="info-name">장자도 식당</div>
+      <div class="info-addr">전북 군산시 옥도면 장자도1길 62</div>
+      <a href="https://naver.me/551He9TQ" class="info-link" target="_blank">네이버 지도에서 보기 →</a>
+    </div>
+
+    <div class="photo-full"><img src="055_1776482036568.jpg" alt="카페 테라스에서"></div>
+  </div>
+
+  <!-- ============ 마무리 ============ -->
+  <div class="ending">
+    <div class="ending-quote">
+      함께 걸었기에 풍경은 기억이 되었고,<br>
+      나눈 말들은 다음을 기약하는 약속이 되었다.
+    </div>
+    <div class="ending-author">IKSAN ARCHITECTS · SPRING 2026</div>
+  </div>
+
+</div>
+
+<script>
+  const audio = document.getElementById('bgmAudio');
+  const icon = document.getElementById('bgmIcon');
+  const player = document.getElementById('bgmPlayer');
+  const artist = player.querySelector('.bgm-artist');
+  let isPlaying = false;
+
+  function toggleBGM() {
+    if (isPlaying) {
+      audio.pause();
+      icon.classList.remove('playing');
+      icon.textContent = '♪';
+      artist.textContent = '아이유 · 클릭하여 재생';
+      isPlaying = false;
+    } else {
+      audio.volume = 0.35;
+      audio.play().then(() => {
+        icon.classList.add('playing');
+        icon.textContent = '■';
+        artist.textContent = '아이유 · 재생 중';
+        isPlaying = true;
+      }).catch(err => {
+        console.log('재생 실패:', err);
+        artist.textContent = '다시 시도해주세요';
+      });
+    }
+  }
+
+  // 페이지 로드 시 자동재생 시도 (브라우저 정책상 실패할 수 있음 → 사용자가 클릭하면 시작됨)
+  window.addEventListener('load', () => {
+    audio.volume = 0.35;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        icon.classList.add('playing');
+        icon.textContent = '■';
+        artist.textContent = '아이유 · 재생 중';
+        isPlaying = true;
+      }).catch(() => {
+        // 자동재생 차단 → 클릭 유도 상태 유지
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

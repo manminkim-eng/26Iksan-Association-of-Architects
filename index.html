@@ -554,6 +554,155 @@
     .video-desc { font-size: 13px; }
   }
 
+  /* ======= 사진 라이트박스 (확대 보기) ======= */
+  .vlog-container img {
+    cursor: zoom-in;
+    transition: opacity 0.2s;
+  }
+  .vlog-container img:hover {
+    opacity: 0.92;
+  }
+  /* 표지 이미지는 cover-text가 위에 있으므로 별도 처리 */
+  .cover {
+    cursor: zoom-in;
+  }
+  .cover-text {
+    pointer-events: none; /* 클릭이 표지 이미지로 통과되도록 */
+  }
+  .cover-text a, .cover-text button {
+    pointer-events: auto; /* 만약 링크/버튼이 있다면 정상 작동 */
+  }
+
+  .lightbox-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lightbox-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox-img-wrap {
+    position: relative;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox-img {
+    max-width: 95vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.6);
+    cursor: zoom-out;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s;
+    z-index: 10001;
+    line-height: 1;
+    padding: 0;
+  }
+  .lightbox-close:hover {
+    background: rgba(255,255,255,0.3);
+  }
+  .lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s;
+    z-index: 10001;
+    user-select: none;
+    line-height: 1;
+    padding: 0;
+  }
+  .lightbox-nav:hover {
+    background: rgba(255,255,255,0.3);
+  }
+  .lightbox-prev { left: 20px; }
+  .lightbox-next { right: 20px; }
+  .lightbox-counter {
+    position: fixed;
+    top: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 10001;
+    background: rgba(0,0,0,0.4);
+    padding: 6px 14px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+  }
+  /* 모바일에서 좌우 버튼 더 작게, 위치 조정 */
+  @media (max-width: 680px) {
+    .lightbox-nav {
+      width: 42px;
+      height: 42px;
+      font-size: 20px;
+    }
+    .lightbox-prev { left: 10px; }
+    .lightbox-next { right: 10px; }
+    .lightbox-close {
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+    .lightbox-counter {
+      top: 22px;
+      font-size: 12px;
+    }
+  }
+  /* 라이트박스 열렸을 때 body 스크롤 잠금 */
+  body.lightbox-open {
+    overflow: hidden;
+  }
+
 </style>
 </head>
 <body>
@@ -948,6 +1097,17 @@
 
 </div>
 
+<!-- ============ 라이트박스 (사진 확대 보기) ============ -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="사진 확대 보기">
+  <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+  <button class="lightbox-close" id="lightboxClose" aria-label="닫기">✕</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="이전 사진">‹</button>
+  <div class="lightbox-img-wrap">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  </div>
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="다음 사진">›</button>
+</div>
+
 <script>
   const audio = document.getElementById('bgmAudio');
   const icon = document.getElementById('bgmIcon');
@@ -1005,6 +1165,165 @@
       }
     });
   });
+
+  // ====== 사진 라이트박스 (확대 보기) ======
+  (function() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+
+    // 확대 대상 이미지 수집: vlog-container 안의 모든 img
+    // (표지의 .cover img도 자동 포함됨)
+    let images = [];
+    let currentIndex = 0;
+
+    function collectImages() {
+      images = Array.from(document.querySelectorAll('.vlog-container img'));
+    }
+
+    function openLightbox(index) {
+      if (index < 0 || index >= images.length) return;
+      currentIndex = index;
+      const img = images[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || '';
+      lightboxCounter.textContent = (currentIndex + 1) + ' / ' + images.length;
+      lightbox.classList.add('active');
+      document.body.classList.add('lightbox-open');
+      updateNavButtons();
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.classList.remove('lightbox-open');
+      // 트랜지션 끝난 뒤 src 비우기 (메모리 정리)
+      setTimeout(() => {
+        if (!lightbox.classList.contains('active')) {
+          lightboxImg.src = '';
+        }
+      }, 300);
+    }
+
+    function showPrev() {
+      if (images.length <= 1) return;
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      const img = images[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || '';
+      lightboxCounter.textContent = (currentIndex + 1) + ' / ' + images.length;
+      updateNavButtons();
+    }
+
+    function showNext() {
+      if (images.length <= 1) return;
+      currentIndex = (currentIndex + 1) % images.length;
+      const img = images[currentIndex];
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt || '';
+      lightboxCounter.textContent = (currentIndex + 1) + ' / ' + images.length;
+      updateNavButtons();
+    }
+
+    function updateNavButtons() {
+      // 이미지가 1개뿐이면 좌우 버튼 숨김
+      if (images.length <= 1) {
+        lightboxPrev.style.display = 'none';
+        lightboxNext.style.display = 'none';
+      } else {
+        lightboxPrev.style.display = 'flex';
+        lightboxNext.style.display = 'flex';
+      }
+    }
+
+    // 사진 클릭 이벤트 등록 (이벤트 위임)
+    document.querySelector('.vlog-container').addEventListener('click', function(e) {
+      // 클릭된 요소가 img이거나, .cover (표지) 영역이면
+      let targetImg = null;
+      if (e.target.tagName === 'IMG' && e.target.closest('.vlog-container')) {
+        targetImg = e.target;
+      } else if (e.target.closest('.cover')) {
+        // 표지 영역의 텍스트 등을 클릭해도 표지 이미지가 열림
+        targetImg = e.target.closest('.cover').querySelector('img');
+      }
+
+      if (targetImg) {
+        // 라이트박스 자체에서 발생한 클릭은 무시 (혹시 모를 중복 방지)
+        if (targetImg.closest('.lightbox-overlay')) return;
+        collectImages(); // 매번 최신 상태로
+        const idx = images.indexOf(targetImg);
+        if (idx !== -1) {
+          e.preventDefault();
+          openLightbox(idx);
+        }
+      }
+    });
+
+    // 닫기 버튼
+    lightboxClose.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeLightbox();
+    });
+
+    // 오버레이(배경) 클릭 시 닫기
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-img-wrap')) {
+        closeLightbox();
+      }
+    });
+
+    // 이미지 자체 클릭해도 닫기
+    lightboxImg.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closeLightbox();
+    });
+
+    // 이전/다음 버튼
+    lightboxPrev.addEventListener('click', function(e) {
+      e.stopPropagation();
+      showPrev();
+    });
+    lightboxNext.addEventListener('click', function(e) {
+      e.stopPropagation();
+      showNext();
+    });
+
+    // 키보드: ESC, 좌우 화살표
+    document.addEventListener('keydown', function(e) {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowLeft') showPrev();
+      else if (e.key === 'ArrowRight') showNext();
+    });
+
+    // 모바일 스와이프 (좌우)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    lightbox.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+      // 가로 이동이 세로 이동보다 충분히 크고 일정 거리 이상일 때만 스와이프 인식
+      if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+        if (diffX > 0) showPrev();
+        else showNext();
+      }
+    }, { passive: true });
+
+    // 초기화
+    collectImages();
+  })();
 </script>
 
 </body>

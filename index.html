@@ -1185,6 +1185,10 @@
         icon.textContent = '■';
         artist.textContent = '아이유 · 재생 중';
         isPlaying = true;
+        // 라이트박스 가드 해제 + TAP TO START 안내 숨김
+        window.__bgmStarted = true;
+        const tapEl = document.getElementById('tapToStart');
+        if (tapEl) tapEl.classList.add('hidden');
       }).catch(err => {
         console.log('재생 실패:', err);
         artist.textContent = '다시 시도해주세요';

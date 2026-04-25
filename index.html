@@ -703,6 +703,61 @@
     overflow: hidden;
   }
 
+  /* ======= TAP TO START 안내 (BGM 시작 유도) ======= */
+  .tap-to-start {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a3a4f;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    z-index: 50;
+    pointer-events: none; /* 클릭은 표지 전체로 통과 */
+    animation: tapPulse 1.6s ease-in-out infinite;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .tap-to-start::before {
+    content: "♪";
+    color: #c47c4a;
+    font-size: 16px;
+    animation: tapNote 1.6s ease-in-out infinite;
+  }
+  .tap-to-start.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+    pointer-events: none;
+  }
+  @keyframes tapPulse {
+    0%, 100% { 
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+    50% { 
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3), 0 0 0 12px rgba(255, 255, 255, 0);
+    }
+  }
+  @keyframes tapNote {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @media (max-width: 680px) {
+    .tap-to-start {
+      bottom: 20px;
+      padding: 12px 22px;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -729,6 +784,7 @@
       <div class="cover-subtitle">고창 · 부안 · 군산</div>
       <div class="cover-bgm-hint"><span>♪ BGM · 아이유 「밤편지」</span></div>
     </div>
+    <div class="tap-to-start hidden" id="tapToStart">TAP TO START</div>
   </div>
 
   <!-- ============ DAY 1 ============ -->
@@ -1138,8 +1194,11 @@
 
   // === BGM 자동재생 강화 ===
   // 1) 페이지 로드 시 바로 재생 시도
-  // 2) 차단되면 사용자가 페이지 어디든 최초로 상호작용(클릭/터치/스크롤/키보드)하는 순간 자동 재생
+  // 2) 차단되면 표지에 'TAP TO START' 안내 표시 → 첫 터치 시 BGM 시작 + 안내 숨김
   
+  // 전역 플래그: 라이트박스가 첫 클릭 무시 여부 판단에 사용
+  window.__bgmStarted = false;
+
   function startBGM() {
     audio.volume = 0.35;
     return audio.play().then(() => {
@@ -1147,22 +1206,33 @@
       icon.textContent = '■';
       artist.textContent = '아이유 · 재생 중';
       isPlaying = true;
+      window.__bgmStarted = true;
+      // 안내 숨기기
+      const tapEl = document.getElementById('tapToStart');
+      if (tapEl) tapEl.classList.add('hidden');
       return true;
     }).catch(() => false);
   }
   
   window.addEventListener('DOMContentLoaded', () => {
+    const tapEl = document.getElementById('tapToStart');
+    
     startBGM().then(success => {
-      if (!success) {
-        // 자동재생 차단 → 첫 사용자 상호작용 시 자동 재생
-        artist.textContent = '아이유 · 곧 재생됩니다';
-        const events = ['click', 'touchstart', 'scroll', 'keydown', 'mousemove'];
-        const triggerOnce = () => {
-          startBGM();
-          events.forEach(e => document.removeEventListener(e, triggerOnce, true));
-        };
-        events.forEach(e => document.addEventListener(e, triggerOnce, { once: true, passive: true, capture: true }));
+      if (success) {
+        // 자동재생 성공: 안내는 계속 숨겨둠
+        return;
       }
+      // 자동재생 차단 → TAP TO START 안내 표시
+      if (tapEl) tapEl.classList.remove('hidden');
+      artist.textContent = '아이유 · 화면을 터치하세요';
+      
+      // 첫 사용자 상호작용 시 BGM 시작
+      const startEvents = ['click', 'touchstart', 'keydown', 'scroll'];
+      const triggerOnce = (e) => {
+        startBGM();
+        startEvents.forEach(ev => document.removeEventListener(ev, triggerOnce, true));
+      };
+      startEvents.forEach(ev => document.addEventListener(ev, triggerOnce, { once: true, passive: true, capture: true }));
     });
   });
 
@@ -1240,6 +1310,12 @@
 
     // 사진 클릭 이벤트 등록 (이벤트 위임)
     document.querySelector('.vlog-container').addEventListener('click', function(e) {
+      // === 첫 클릭 가드: BGM이 아직 시작 안 됐으면 사진 확대 막음 ===
+      // (첫 터치는 BGM 시작용으로만 사용 → 안내가 사라진 후 두 번째 터치부터 확대)
+      if (!window.__bgmStarted) {
+        return;
+      }
+
       // 클릭된 요소가 img이거나, .cover (표지) 영역이면
       let targetImg = null;
       if (e.target.tagName === 'IMG' && e.target.closest('.vlog-container')) {
